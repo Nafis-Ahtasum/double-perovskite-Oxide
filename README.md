@@ -10,28 +10,21 @@ This is a work flow that discovers lead free double perovskite oxides  and valid
 [![XGBoost](https://img.shields.io/badge/XGBoost-EB2529?logo=xgboost&logoColor=white)](https://xgboost.readthedocs.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 
-A machine learning framework for the accelerated discovery of lead-free ordered double perovskite oxides ($A_2BB'O_6$). This repository integrates data-driven surrogate modeling with physics-based screening funnels to resolve the multi-objective optimization challenge across **thermodynamic phase stability**, **metal/insulator classification**, and the **Shockley–Queisser (SQ) optimal bandgap window** ($1.1 \le E_g \le 1.4\text{ eV}$).
+It is a machine learning framework trained on over 5000 double perovskite datasets, deployed for the accelerated discovery of lead-free ordered double perovskite oxides ($A_2BB'O_6$). This repository integrates data-driven surrogate modeling with physics-based screening funnels to resolve the multi-objective optimization challenge across **thermodynamic phase stability**, **metal/insulator classification**, and the **Shockley–Queisser (SQ) optimal bandgap window** ($1.1 \le E_g \le 1.4\text{ eV}$).
 
 
 
-# Double Perovskite Oxide Discovery Pipeline
-
-[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-
-I built this repository to screen and find stable, lead-free double perovskite oxides ($A_2BB'O_6$) for solar cells. 
-
-Running DFT across thousands of potential compositions on a university cluster takes way too long. To get around this, I trained machine learning models on over 5,000 double perovskite structures to quickly check stability, filter out metals, and predict bandgaps.
 
 
 
-### The Problems We Are Solving Here
 
-Finding a workable double perovskite oxide absorber comes down to balancing three conflicting issues:
+### The Problem We Are Solving
 
-* **Phase separation:** A lot of compositions look fine on paper (charge-balanced) but end up decomposing into binary or ternary oxides in practice.
-* **Metallic ground states:** Swapping transition metals into the B and B' sites often causes the bandgap to collapse to zero, giving you a conductor instead of a semiconductor.
-* **Narrow bandgap target:** To get decent efficiency under the Shockley–Queisser limit, the material needs a bandgap between 1.1 eV and 1.4 eV.
+Finding a working lead-free double perovskite oxide absorber is difficult because several physical trade-offs compete directly against one another:
+
+* **Thermodynamic phase stability:** Many charge-balanced compositions never form a single-phase crystal and immediately decompose into simpler binary or ternary oxides.
+* **Metallic transport bottlenecks:** Introducing various transition metals into the B/B' sublattices frequently causes the valence and conduction bands to overlap, turning the compound into a metallic conductor instead of a semiconductor.
+* **Bandgap placement for solar harvesting:** To reach maximum theoretical efficiency under the Shockley–Queisser limit, single-junction photovoltaic absorbers need an electronic bandgap positioned squarely between 1.1 eV and 1.4 eV.
 
 
 
