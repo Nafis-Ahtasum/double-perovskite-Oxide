@@ -37,7 +37,7 @@ Instead of running a bandgap model on every compound blindly, the pipeline filte
 3. **Metal vs. semiconductor gate:** Drops metallic/conductive phases.
 4. **Bandgap regression:** Uses regression models to predict $E_g$ and flag anything in the 1.1–1.4 eV target window.
 
-### Density Functional Theory (DFT) Calculations
+### Validation through Density Functional Theory (DFT) Calculations
 
 For the top candidate endpoints that passed all machine learning gates, we carried out first-principles DFT calculations to explicitly verify their ground-state properties:
 
