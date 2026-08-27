@@ -1,5 +1,5 @@
 # double-perovskite-Oxide
-This is a work flow that discovers lead free double perovskite oxides  and validates with first principles DFT
+This is a work flow that discovers lead free double perovskite oxides  and validates them with first-principles DFT
 
 
 
@@ -13,15 +13,6 @@ This is a work flow that discovers lead free double perovskite oxides  and valid
 A machine learning framework for the accelerated discovery of lead-free ordered double perovskite oxides ($A_2BB'O_6$). This repository integrates data-driven surrogate modeling with physics-based screening funnels to resolve the multi-objective optimization challenge across **thermodynamic phase stability**, **metal/insulator classification**, and the **Shockley–Queisser (SQ) optimal bandgap window** ($1.1 \le E_g \le 1.4\text{ eV}$).
 
 
-
-## 1. Project Background & Motivation
-
-Finding viable, non-toxic alternatives to traditional lead-halide perovskites requires navigating non-linear physical and chemical trade-offs:
-* **Thermodynamic Phase Stability:** Nominal charge neutrality alone does not prevent spontaneous phase separation into competing binary or ternary oxides.
-* **Electronic Ground State (Metal vs. Insulator/Semiconductor):** Incorporating open-shell transition metals often collapses the fundamental bandgap into metallic or narrow-gap conductor states.
-* **Optical Absorption & SQ Optimum:** Single-junction solar energy conversion demands an electronic bandgap strictly targeted between $1.1\text{ eV}$ and $1.4\text{ eV}$ to maximize theoretical power conversion efficiency.
-
-This framework replaces brute-force forward quantum-mechanical simulations with a multi-stage machine learning screening funnel trained and cross-validated on **5,000+ DFT-calculated double perovskite configurations**.
 
 # Machine Learning Discovery of Lead-Free Double Perovskite Oxides
 
