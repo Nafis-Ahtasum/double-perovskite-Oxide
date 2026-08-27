@@ -58,6 +58,6 @@ All input features are built entirely from basic elemental and structural proper
 
 * **Geometric parameters:** Shannon ionic radii ($r_A, r_B, r_{B'}, r_O$), Goldschmidt tolerance factor ($t$), and octahedral factor ($\mu$).
 * **Electronegativity and bonding:** Pauling electronegativities ($\chi_A, \chi_B, \chi_{B'}$) and metal-oxygen electronegativity differences ($\Delta\chi$).
-* **Electronic identity:** Formal oxidation states ($B^{3+}/B'^{3+}$ vs. $B^{2+}/B'^{4+}$) and valence electron counts.
+
 
 
