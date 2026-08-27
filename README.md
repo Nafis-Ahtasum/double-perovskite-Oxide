@@ -37,6 +37,18 @@ Instead of running a bandgap model on every compound blindly, the pipeline filte
 3. **Metal vs. semiconductor gate:** Drops metallic/conductive phases.
 4. **Bandgap regression:** Uses regression models to predict $E_g$ and flag anything in the 1.1–1.4 eV target window.
 
+### Density Functional Theory (DFT) Calculations
+
+For the top candidate endpoints that passed all machine learning gates, we carried out first-principles DFT calculations to explicitly verify their ground-state properties:
+
+* **Structural Relaxations:** Performed spin-polarized geometry optimizations using the GGA-PBE functional, allowing both cell parameters and atomic coordinates to fully relax until residual forces converged.
+* **Electronic Band Structures & PDOS:** Computed electronic dispersion and projected density of states to confirm:
+  * The true fundamental electronic bandgap ($E_g$).
+  * Direct vs. indirect bandgap nature.
+  * Orbital character and hybridization at the valence band maximum (VBM) and conduction band minimum (CBM).
+* **Thermodynamic Phase Stability:** Evaluated decomposition enthalpies ($\Delta H$) against competing binary/ternary oxide decomposition routes to confirm experimental synthesizability and low energy above the convex hull.
+
+
 
 ### Saved Models
 
