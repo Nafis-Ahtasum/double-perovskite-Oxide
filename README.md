@@ -14,50 +14,59 @@ A machine learning framework for the accelerated discovery of lead-free ordered 
 
 
 
-# Machine Learning Discovery of Lead-Free Double Perovskite Oxides
+# Double Perovskite Oxide Discovery Pipeline
 
-This repository contains the machine learning pipeline I developed to screen and discover new lead-free double perovskite oxides ($A_2BB'O_6$) for solar cells and optoelectronic applications. 
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 
-Running first-principles DFT calculations for thousands of potential compositions simply takes too much computation time and cluster resources. To work around that bottleneck, I trained surrogate machine learning models on a dataset of over 5,000 double perovskite structures to quickly evaluate stability, electronic behavior, and optical bandgaps in a matter of seconds.
+I built this repository to screen and find stable, lead-free double perovskite oxides ($A_2BB'O_6$) for solar cells. 
 
-
-
-
-### The Problem We Are Solving
-
-Finding a working lead-free double perovskite oxide absorber is difficult because several physical trade-offs compete directly against one another:
-
-* **Thermodynamic phase stability:** Many charge-balanced compositions never form a single-phase crystal and immediately decompose into simpler binary or ternary oxides.
-* **Metallic transport bottlenecks:** Introducing various transition metals into the B/B' sublattices frequently causes the valence and conduction bands to overlap, turning the compound into a metallic conductor instead of a semiconductor.
-* **Bandgap placement for solar harvesting:** To reach maximum theoretical efficiency under the Shockley–Queisser limit, single-junction photovoltaic absorbers need an electronic bandgap positioned squarely between 1.1 eV and 1.4 eV.
-
-
-### How the Multi-Stage Screening Works
-
-Instead of running a single regression model on every composition blindly, the pipeline filters candidates through several sequential gates:
-
-1. **Geometric formability:** We first calculate the Goldschmidt tolerance factor ($0.8 \le t \le 1.1$) and octahedral factor ($\mu \ge 0.414$) using Shannon ionic radii to reject structurally unfeasible packing arrangements early.
-2. **Thermodynamic stability screening:** Candidates that pass the geometric filter are evaluated by a classification layer to ensure they reside on or very close to the convex hull ($E_{\text{hull}}$), rejecting combinations prone to phase separation.
-3. **Metal vs. insulator/semiconductor gating:** The remaining phases are checked to separate true semiconducting/insulating electronic configurations from zero-gap metallic states.
-4. **Bandgap regression:** Finally, the pre-trained regression models predict the scalar bandgap ($E_g$) and isolate only the compositions that land right inside the target 1.1 to 1.4 eV Shockley–Queisser window.
+Running DFT across thousands of potential compositions on a university cluster takes way too long. To get around this, I trained machine learning models on over 5,000 double perovskite structures to quickly check stability, filter out metals, and predict bandgaps.
 
 
 
-### Pre-Trained Models in This Repo
+### The Problems We Are Solving Here
 
-The pre-trained models are saved directly inside `model/bandgap/`:
+Finding a workable double perovskite oxide absorber comes down to balancing three conflicting issues:
 
-* **`xgbr_model.joblib`:** An Extreme Gradient Boosting (XGBoost) regressor. This is the primary model used for bandgap targeting because it captures complex, non-linear interactions across mixed cation sublattices with the lowest test error.
-* **`rf_model.joblib`:** A Random Forest regressor that serves as a dependable ensemble baseline and helps verify feature importances.
-* **`svr_model.joblib`:** A Support Vector Regressor with an RBF kernel for boundary checks in lower-variance descriptor spaces.
+* **Phase separation:** A lot of compositions look fine on paper (charge-balanced) but end up decomposing into binary or ternary oxides in practice.
+* **Metallic ground states:** Swapping transition metals into the B and B' sites often causes the bandgap to collapse to zero, giving you a conductor instead of a semiconductor.
+* **Narrow bandgap target:** To get decent efficiency under the Shockley–Queisser limit, the material needs a bandgap between 1.1 eV and 1.4 eV.
 
 
-### Input Features
 
-All input features are built entirely from basic elemental and structural properties without needing relaxed DFT crystal coordinates:
+### How the Screening Works
 
-* **Geometric parameters:** Shannon ionic radii ($r_A, r_B, r_{B'}, r_O$), Goldschmidt tolerance factor ($t$), and octahedral factor ($\mu$).
-* **Electronegativity and bonding:** Pauling electronegativities ($\chi_A, \chi_B, \chi_{B'}$) and metal-oxygen electronegativity differences ($\Delta\chi$).
+Instead of running a bandgap model on every compound blindly, the pipeline filters candidates step-by-step:
 
+1. **Geometric sanity check:** Calculates the Goldschmidt tolerance factor ($0.8 \le t \le 1.1$) and octahedral factor ($\mu \ge 0.414$) to drop distorted or impossible packing geometries early.
+2. **Stability filter:** Keeps compounds close to the convex hull ($E_{\text{hull}}$) to avoid phases that decompose.
+3. **Metal vs. semiconductor gate:** Drops metallic/conductive phases.
+4. **Bandgap regression:** Uses regression models to predict $E_g$ and flag anything in the 1.1–1.4 eV target window.
+
+
+### Saved Models
+
+The trained model files are in `model/bandgap/`:
+
+* `xgbr_model.joblib`: Tuned XGBoost regressor (gives the lowest test error and serves as the main model)[cite: 2].
+* `rf_model.joblib`: Random Forest baseline[cite: 2].
+* `svr_model.joblib`: Support Vector Regressor with an RBF kernel[cite: 2].
+
+
+### Descriptors
+
+All input features are generated directly from composition and elemental tables, so you don't need relaxed DFT structures beforehand:
+
+* **Radii & Packing:** Shannon ionic radii ($r_A, r_B, r_{B'}, r_O$), tolerance factor ($t$), and octahedral factor ($\mu$).
+* **Electronegativity:** Pauling electronegativities and metal-oxygen differences ($\Delta\chi$).
+* **Valence info:** Formal oxidation states ($B^{3+}/B'^{3+}$ vs. $B^{2+}/B'^{4+}$) and valence electron counts.
+o
+git clone [https://github.com/your-username/oxide_perov.git](https://github.com/your-username/oxide_perov.git)
+cd oxide_perov
+pip install -r requirements.txt
+
+# Run the screening script
+python -m src.screening --input data/candidates.csv --output data/screened_results.csv
 
 
