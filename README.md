@@ -23,25 +23,50 @@ Finding viable, non-toxic alternatives to traditional lead-halide perovskites re
 
 This framework replaces brute-force forward quantum-mechanical simulations with a multi-stage machine learning screening funnel trained and cross-validated on **5,000+ DFT-calculated double perovskite configurations**.
 
+# Machine Learning Discovery of Lead-Free Double Perovskite Oxides
 
-## 2. Multi-Stage Screening Funnel Architecture
+This repository contains the machine learning pipeline I developed to screen and discover new lead-free double perovskite oxides ($A_2BB'O_6$) for solar cells and optoelectronic applications. 
 
-The pipeline processes vast combinatorial spaces of $A_2BB'O_6$ compositions through sequential, physics-informed filters:
+Running first-principles DFT calculations for thousands of potential compositions simply takes too much computation time and cluster resources. To work around that bottleneck, I trained surrogate machine learning models on a dataset of over 5,000 double perovskite structures to quickly evaluate stability, electronic behavior, and optical bandgaps in a matter of seconds.
 
 
-[ Combinatorial Composition Space: A₂BB'O₆ ]
-  │
-  ├──► Gate 1: Geometric Formability Filter
-  │    (Tolerance factor: 0.8 ≤ t ≤ 1.1; Octahedral factor: μ ≥ 0.414)
-  │
-  ├──► Gate 2: Thermodynamic Phase Stability Classifier
-  │    (Filters for near-hull viability: ΔE_hull ≤ 25–50 meV/atom)
-  │
-  ├──► Gate 3: Metal / Insulator Classification Gate
-  │    (Screens out metallic/conductive electronic configurations)
-  │
-  └──► Gate 4: Electronic Bandgap Surrogate Regression (RF / SVR / XGBR)
-       (Targets the Shockley–Queisser optimum: 1.1 eV ≤ Eg ≤ 1.4 eV)
-       │
-       ▼
- [ Shortlisted Lead-Free Photovoltaic & Optoelectronic Candidate Endpoints ]
+
+
+### The Problem We Are Solving
+
+Finding a working lead-free double perovskite oxide absorber is difficult because several physical trade-offs compete directly against one another:
+
+* **Thermodynamic phase stability:** Many charge-balanced compositions never form a single-phase crystal and immediately decompose into simpler binary or ternary oxides.
+* **Metallic transport bottlenecks:** Introducing various transition metals into the B/B' sublattices frequently causes the valence and conduction bands to overlap, turning the compound into a metallic conductor instead of a semiconductor.
+* **Bandgap placement for solar harvesting:** To reach maximum theoretical efficiency under the Shockley–Queisser limit, single-junction photovoltaic absorbers need an electronic bandgap positioned squarely between 1.1 eV and 1.4 eV.
+
+
+### How the Multi-Stage Screening Works
+
+Instead of running a single regression model on every composition blindly, the pipeline filters candidates through several sequential gates:
+
+1. **Geometric formability:** We first calculate the Goldschmidt tolerance factor ($0.8 \le t \le 1.1$) and octahedral factor ($\mu \ge 0.414$) using Shannon ionic radii to reject structurally unfeasible packing arrangements early.
+2. **Thermodynamic stability screening:** Candidates that pass the geometric filter are evaluated by a classification layer to ensure they reside on or very close to the convex hull ($E_{\text{hull}}$), rejecting combinations prone to phase separation.
+3. **Metal vs. insulator/semiconductor gating:** The remaining phases are checked to separate true semiconducting/insulating electronic configurations from zero-gap metallic states.
+4. **Bandgap regression:** Finally, the pre-trained regression models predict the scalar bandgap ($E_g$) and isolate only the compositions that land right inside the target 1.1 to 1.4 eV Shockley–Queisser window.
+
+
+
+### Pre-Trained Models in This Repo
+
+The pre-trained models are saved directly inside `model/bandgap/`:
+
+* **`xgbr_model.joblib`:** An Extreme Gradient Boosting (XGBoost) regressor. This is the primary model used for bandgap targeting because it captures complex, non-linear interactions across mixed cation sublattices with the lowest test error.
+* **`rf_model.joblib`:** A Random Forest regressor that serves as a dependable ensemble baseline and helps verify feature importances.
+* **`svr_model.joblib`:** A Support Vector Regressor with an RBF kernel for boundary checks in lower-variance descriptor spaces.
+
+
+### Input Features
+
+All input features are built entirely from basic elemental and structural properties without needing relaxed DFT crystal coordinates:
+
+* **Geometric parameters:** Shannon ionic radii ($r_A, r_B, r_{B'}, r_O$), Goldschmidt tolerance factor ($t$), and octahedral factor ($\mu$).
+* **Electronegativity and bonding:** Pauling electronegativities ($\chi_A, \chi_B, \chi_{B'}$) and metal-oxygen electronegativity differences ($\Delta\chi$).
+* **Electronic identity:** Formal oxidation states ($B^{3+}/B'^{3+}$ vs. $B^{2+}/B'^{4+}$) and valence electron counts.
+
+
