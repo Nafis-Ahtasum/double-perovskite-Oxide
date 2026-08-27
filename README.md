@@ -53,13 +53,3 @@ All input features are generated directly from composition and elemental tables,
 
 * **Radii & Packing:** Shannon ionic radii ($r_A, r_B, r_{B'}, r_O$), tolerance factor ($t$), and octahedral factor ($\mu$).
 * **Electronegativity:** Pauling electronegativities and metal-oxygen differences ($\Delta\chi$).
-* **Valence info:** Formal oxidation states ($B^{3+}/B'^{3+}$ vs. $B^{2+}/B'^{4+}$) and valence electron counts.
-o
-git clone [https://github.com/your-username/oxide_perov.git](https://github.com/your-username/oxide_perov.git)
-cd oxide_perov
-pip install -r requirements.txt
-
-# Run the screening script
-python -m src.screening --input data/candidates.csv --output data/screened_results.csv
-
-
