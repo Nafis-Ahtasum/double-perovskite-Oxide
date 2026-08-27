@@ -42,9 +42,9 @@ Instead of running a bandgap model on every compound blindly, the pipeline filte
 
 The trained model files are in `model/bandgap/`:
 
-* `xgbr_model.joblib`: Tuned XGBoost regressor (gives the lowest test error and serves as the main model)[cite: 2].
-* `rf_model.joblib`: Random Forest baseline[cite: 2].
-* `svr_model.joblib`: Support Vector Regressor with an RBF kernel[cite: 2].
+* `xgbr_model.joblib`: Tuned XGBoost regressor (gives the lowest test error and serves as the main model).
+* `rf_model.joblib`: Random Forest baseline.
+* `svr_model.joblib`: Support Vector Regressor with an RBF kernel.
 
 
 ### Descriptors
